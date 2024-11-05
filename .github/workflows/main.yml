@@ -1,6 +1,6 @@
- name: Python package
- on: [push]
- jobs:
+name: Python package
+on: [push]
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
@@ -15,39 +15,29 @@
         run: pip install -r requirements.txt
       - name: Run tests
         run: python manage.py test
+
   git-bisect:
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
 
-      steps:
-        - name: Checkout the repository
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
 
-        - name: Set up Python
-          uses: actions/setup-python@v2
-          with:
-            python-version: "3.9"
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
 
-        - name: Install dependencies
-          run: |
-            python -m venv venv 
-            source venv/bin/activate
-            pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
 
-        - name: Set up git bisect
-          run: |
-            badhash="c1a4be04b972b6c17db242fc37752ad517c29402"
-            goodhash="e4cfc6f77ebbe2e23550ddab682316ab4ce1c03c"
-            
-            git bisect start $badhash $goodhash
+      - name: Run git bisect script
+        run: |
+          python myscript.py  # Replace with the path to your script
 
-        - name: Run git bisect with tests
-          run: |
-            git bisect run python manage.py test
-
-        - name: Reset git bisect
-          run: |
-            git bisect reset
-
-        - name: Show first bad commit
-          run: |
-            echo "The first bad commit is: $(git bisect log | tail -n 1)"
+      - name: Show first bad commit
+        run: |
+          echo "The first bad commit is: $(git bisect log | tail -n 1)"
