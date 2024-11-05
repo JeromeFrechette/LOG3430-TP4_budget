@@ -36,7 +36,7 @@ jobs:
 
       - name: Run git bisect script
         run: |
-          python myscript.py  # Replace with the path to your script
+          python .github/workflows/myscript.py
 
       - name: Show first bad commit
         run: |
